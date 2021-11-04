@@ -28,11 +28,12 @@ HOMEWORK_STATUSES = {
 
 
 class CustomError(Exception):
+    """кастомная ошибка."""
     pass
 
 
 def send_message(bot, message):
-    """ сообщение направляется в телеграм"""
+    """сообщение направляется в телеграм."""
     try:
         bot.send_message(CHAT_ID, message)
         logger.info(
@@ -43,8 +44,8 @@ def send_message(bot, message):
 
 
 def get_api_answer(url, current_timestamp):
-    """ отправляет запрос к яндекс апи, в случае ошибок документирует их в логере
-    и выкидывает CutsomError"""
+    """отправляет запрос к яндекс апи, в случае ошибок документирует их в логере
+    и выкидывает CutsomError."""
     from_time = int(current_timestamp - RETRY_TIME)
     headers = {'Authorization': f'OAuth {PRACTICUM_TOKEN}'}
     payload = {'from_date': from_time}
@@ -63,7 +64,7 @@ def get_api_answer(url, current_timestamp):
 
 
 def parse_status(homework):
-    """ извлекает из ответа апи требуемые значения, документирует ошикби"""
+    """извлекает из ответа апи требуемые значения, документирует ошикби."""
     status = homework.get('status')
     if status is None:
         error_desc = f'Error! "status" is empty: {status}'
@@ -79,7 +80,7 @@ def parse_status(homework):
 
 
 def check_response(response):
-    """ проверка, содержится ли в ответе новый статус"""
+    """проверка, содержится ли в ответе новый статус."""
     homeworks = response.get('homeworks')
     if len(homeworks) == 0:
         return {}
@@ -96,7 +97,7 @@ def check_response(response):
 
 
 def check_tokens():
-    """ проверка присутствия обязательных переменных окружения"""
+    """проверка присутствия обязательных переменных окружения."""
     for token in [PRACTICUM_TOKEN, TELEGRAM_TOKEN, CHAT_ID]:
         if token is None:
             logger.critical(
@@ -105,7 +106,7 @@ def check_tokens():
 
 
 def main():
-    """ инициализируем бота, запускаем рабочий цикл"""
+    """инициализируем бота, запускаем рабочий цикл."""
     check_tokens()
     bot = telegram.Bot(token=TELEGRAM_TOKEN)
     current_timestamp = int(time.time())
