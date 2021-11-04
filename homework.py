@@ -2,10 +2,8 @@ import logging
 import os
 import telegram
 import time
-
 import requests
-
-from dotenv import load_dotenv 
+from dotenv import load_dotenv
 
 logging.basicConfig(
     format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
@@ -27,6 +25,7 @@ HOMEWORK_STATUSES = {
     'reviewing': 'Работа взята на проверку ревьюером.',
     'rejected': 'Работа проверена, в ней нашлись ошибки.'
 }
+
 
 class CustomError(Exception):
     pass
@@ -62,6 +61,7 @@ def get_api_answer(url, current_timestamp):
     except Exception as error_desc:
         logging.error(error_desc)
 
+
 def parse_status(homework):
     """ извлекает из ответа апи требуемые значения, документирует ошикби"""
     status = homework.get('status')
@@ -94,6 +94,7 @@ def check_response(response):
         raise CustomError(error_desc)
     return homeworks[0]
 
+
 def check_tokens():
     """ проверка присутствия обязательных переменных окружения"""
     for token in [PRACTICUM_TOKEN, TELEGRAM_TOKEN, CHAT_ID]:
@@ -102,9 +103,10 @@ def check_tokens():
                 f'Operation will be terminated: {token} is missing.')
             exit()
 
+
 def main():
     """ инициализируем бота, запускаем рабочий цикл"""
-    check_tokens() 
+    check_tokens()
     bot = telegram.Bot(token=TELEGRAM_TOKEN)
     current_timestamp = int(time.time())
     while True:
