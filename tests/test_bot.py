@@ -99,7 +99,8 @@ class TestHomework:
 
     def test_logger(self, monkeypatch, random_timestamp):
         def mock_telegram_bot(*args, **kwargs):
-            return MockTelegramBot(*args, random_timestamp=random_timestamp, **kwargs)
+            return MockTelegramBot(*args, random_timestamp=random_timestamp,
+                                   **kwargs)
 
         monkeypatch.setattr(telegram, "Bot", mock_telegram_bot)
 
@@ -111,7 +112,8 @@ class TestHomework:
 
     def test_send_message(self, monkeypatch, random_timestamp):
         def mock_telegram_bot(*args, **kwargs):
-            return MockTelegramBot(*args, random_timestamp=random_timestamp, **kwargs)
+            return MockTelegramBot(*args, random_timestamp=random_timestamp,
+                                   **kwargs)
 
         monkeypatch.setattr(telegram, "Bot", mock_telegram_bot)
 
@@ -179,7 +181,7 @@ class TestHomework:
         func_name = 'get_api_answer'
         try:
             homework.get_api_answer(api_url, current_timestamp)
-        except:
+        except Exception:
             return
         assert False, (
             f'Убедитесь, что в функции `{func_name}` обрабатываете ситуацию, '
@@ -300,7 +302,7 @@ class TestHomework:
         response = homework.get_api_answer(api_url, current_timestamp)
         try:
             homework.check_response(response)
-        except:
+        except Exception:
             return
         assert False, (
             f'Убедитесь, что функция `{func_name} правильно работает '
@@ -333,7 +335,7 @@ class TestHomework:
         result = homework.get_api_answer(api_url, current_timestamp)
         try:
             homework.check_response(result)
-        except:
+        except Exception:
             return
         assert False, (
             f'Убедитесь, что в функции `{func_name} '
@@ -366,7 +368,7 @@ class TestHomework:
         result = homework.get_api_answer(api_url, current_timestamp)
         try:
             homework.check_response(result)
-        except:
+        except Exception:
             return
         assert False, (
             f'Убедитесь, что в функции `{func_name} '
@@ -391,7 +393,7 @@ class TestHomework:
         func_name = 'check_response'
         try:
             homework.get_api_answer(api_url, current_timestamp)
-        except:
+        except Exception:
             return
         assert False, (
             f'Убедитесь, что в функции `{func_name}` обрабатываете ситуацию, '
