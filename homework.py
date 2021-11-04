@@ -29,6 +29,7 @@ HOMEWORK_STATUSES = {
 
 class CustomError(Exception):
     """кастомная ошибка."""
+
     pass
 
 
@@ -44,8 +45,10 @@ def send_message(bot, message):
 
 
 def get_api_answer(url, current_timestamp):
-    """отправляет запрос к яндекс апи, в случае ошибок документирует их в логере
-    и выкидывает CutsomError."""
+    """
+    отправляет запрос к яндекс апи, в случае ошибок документирует их в логере
+    и выкидывает CutsomError.
+    """
     from_time = int(current_timestamp - RETRY_TIME)
     headers = {'Authorization': f'OAuth {PRACTICUM_TOKEN}'}
     payload = {'from_date': from_time}
