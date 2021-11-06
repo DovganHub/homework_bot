@@ -28,13 +28,7 @@ HOMEWORK_STATUSES = {
 
 
 class CustomError(Exception):
-    """кастомная ошибка."""
-
-    pass
-
-
-class TheAnswerIsNot200Error(Exception):
-    """Ответ сервера не равен 200."""
+    """кастомная ошибка на все случаи жизни."""
 
     pass
 
@@ -58,14 +52,14 @@ def get_api_answer(url, current_timestamp):
 
     try:
         response = requests.get(url, headers=headers, params=payload)
-
         if response.status_code != 200:
-            raise TheAnswerIsNot200Error(
-                f'Эндпоинт {ENDPOINT} недоступен. '
-                f'Код ответа API: {response.status_code}')
+            logging.error(
+                f'Endpoint is unavailable. API status: {response.status_code}')
+            raise CustomError(response.status_code)
         return response.json()
     except Exception as error_desc:
         logging.error(error_desc)
+        raise CustomError(response.status_code)
 
 
 def parse_status(homework):
@@ -116,6 +110,7 @@ def main():
     check_tokens()
     bot = telegram.Bot(token=TELEGRAM_TOKEN)
     current_timestamp = int(time.time())
+    error_flag = True
     while True:
         try:
             response = get_api_answer(ENDPOINT, current_timestamp)
@@ -128,6 +123,9 @@ def main():
             current_timestamp = int(time.time())
         except Exception as error:
             error_desc = f'Сбой в работе программы: {error}'
+            if error_flag:
+                error_flag = False
+                send_message(bot, error_desc)
             logging.error(error_desc)
             time.sleep(RETRY_TIME)
             current_timestamp = int(time.time())
