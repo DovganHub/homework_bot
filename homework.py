@@ -35,7 +35,9 @@ class CustomError(Exception):
 
 class TheAnswerIsNot200Error(Exception):
     """Ответ сервера не равен 200."""
+
     pass
+
 
 def send_message(bot, message):
     """сообщение направляется в телеграм."""
@@ -56,14 +58,11 @@ def get_api_answer(url, current_timestamp):
 
     try:
         response = requests.get(url, headers=headers, params=payload)
-        # if response.status_code != 200:
-        #     logging.error(
-        #         f'Endpoint недоступен. Код ответа API: {response.status_code}')
-        #     raise TheAnswerIsNot200Error(response.status_code)
+
         if response.status_code != 200:
             raise TheAnswerIsNot200Error(
-        f'Эндпоинт {ENDPOINT} недоступен. '
-        f'Код ответа API: {response.status_code}')
+                f'Эндпоинт {ENDPOINT} недоступен. '
+                f'Код ответа API: {response.status_code}')
         return response.json()
     except Exception as error_desc:
         logging.error(error_desc)
