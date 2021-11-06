@@ -86,7 +86,6 @@ def parse_status(homework):
 
 def check_response(response):
     """проверка, содержится ли в ответе новый статус."""
-
     homeworks = response.get('homeworks')
 
     if len(homeworks) == 0:
