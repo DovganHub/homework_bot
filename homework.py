@@ -65,15 +65,7 @@ def get_api_answer(url, current_timestamp):
 def parse_status(homework):
     """извлекает из ответа апи требуемые значения, документирует ошикби."""
     status = homework.get('status')
-    if status is None:
-        error_desc = f'Error! "status" is empty: {status}'
-        logger.error(error_desc)
-        raise CustomError(error_desc)
     homework_name = homework.get('homework_name')
-    if homework_name is None:
-        error_desc = f'Error! "homework_name" is empty: {homework_name}'
-        logger.error(error_desc)
-        raise CustomError(error_desc)
     verdict = HOMEWORK_STATUSES[status]
     return f'Изменился статус проверки работы "{homework_name}". {verdict}'
 
@@ -81,16 +73,26 @@ def parse_status(homework):
 def check_response(response):
     """проверка, содержится ли в ответе новый статус."""
     homeworks = response.get('homeworks')
-
     if len(homeworks) == 0:
-        return {}
+        error_desc = 'Empty answer!'
+        logger.error(error_desc)
+        raise CustomError(error_desc)
     elif homeworks is None:
-        error_desc = ('Key error')
+        error_desc = ('Missing "homeworks" key!')
+        logger.error(error_desc)
+        raise CustomError(error_desc)
+    homework_name = homeworks[0].get('homework_name')
+    if homework_name is None:
+        error_desc = f'Error! "homework_name" is empty: {homework_name}'
         logger.error(error_desc)
         raise CustomError(error_desc)
     status = homeworks[0].get('status')
     if status not in HOMEWORK_STATUSES:
         error_desc = f'Error. Unknown status key: {status}'
+        logger.error(error_desc)
+        raise CustomError(error_desc)
+    elif status is None:
+        error_desc = f'Error! "status" is empty: {status}'
         logger.error(error_desc)
         raise CustomError(error_desc)
     return homeworks[0]
