@@ -4,6 +4,7 @@ import telegram
 import time
 import requests
 from dotenv import load_dotenv
+from http import HTTPStatus
 
 logging.basicConfig(
     format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
@@ -52,7 +53,7 @@ def get_api_answer(url, current_timestamp):
 
     try:
         response = requests.get(url, headers=headers, params=payload)
-        if response.status_code != 200:
+        if response.status_code != HTTPStatus.OK:
             logging.error(
                 f'Endpoint is unavailable. API status: {response.status_code}')
             raise CustomError(response.status_code)
